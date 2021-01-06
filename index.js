@@ -1,4 +1,5 @@
 const { Client, MessageEmbed } = require("discord.js");
+const debugFunctions = require("./debugFunctions");
 const {
     CardHunter,
     CardMummy,
@@ -13,6 +14,45 @@ const {
 const bot = new Client();
 const token = "Your bot token here";
 
+const messageFunctions = {
+    register: (msg) => registerUserFromMessage(msg),
+    "list players": (msg) => listPlayers(msg.channel),
+    start: (msg) => startGame(msg.channel),
+    "debug.showCache": () => debugFunctions.showCache(bot.users.cache),
+    "debug.listPlayers": () => debugFunctions.listPlayers(players),
+    "debug.vars.cemitery": (msg) =>
+        debugFunctions.varsCemitery(msg.channel, cemitery),
+    "debug.vars.currentTurn": (msg) =>
+        debugFunctions.varsCurrentTurn(msg.channel, currentTurn),
+    "debug.vars.dayNightTurn": (msg) =>
+        debugFunctions.varsDayNightTurn(msg.channel, dayNightTurn),
+    "debug.vars.deck": (msg) => debugFunctions.varsDeck(msg.channel, deck),
+    "debug.vars.isGameOn": (msg) =>
+        debugFunctions.varsIsGameOn(msg.channel, isGameOn),
+    "debug.vars.players": (msg) =>
+        debugFunctions.varsPlayers(msg.channel, players),
+    "debug.vars.playerCount": (msg) =>
+        debugFunctions.varsPlayerCount(msg.channel, playerCount),
+    "debug.vars.playerCards": (msg) =>
+        debugFunctions.varsPlayerCards(msg.channel, playerCards),
+    "debug.vars.hunterChosenIndex": (msg) =>
+        debugFunctions.varsHunterChosenIndex(msg.channel, hunterChosenIndex),
+    "debug.vars.zombieChosenIndex": (msg) =>
+        debugFunctions.varsZombieChosenIndex(msg.channel, zombieChosenIndex),
+    "debug.vars.vampireChosenIndex": (msg) =>
+        debugFunctions.varsVampireChosenIndex(
+            msg.channel,
+            vampireChosenCemiteryIndex,
+            vampireChosenPlayerIndex
+        ),
+    "debug.vars.pendingZombieNewActionExecution": (msg) =>
+        debugFunctions.varsPendingZombieNewActionExecution(
+            msg.channel,
+            pendingZombieNewActionExecution
+        ),
+    "debug.help": (msg) => debugFunctions.help(msg.channel),
+};
+
 bot.login(token);
 bot.on("ready", () => {
     console.log("READY");
@@ -24,163 +64,7 @@ bot.on("message", (msg) => {
         return;
     }
 
-    switch (msg.content) {
-        case "register":
-            registerUserFromMessage(msg);
-            break;
-
-        case "list players":
-            listPlayers(msg.channel);
-            break;
-
-        case "start":
-            startGame(msg.channel);
-            break;
-
-        case "debug.showCache":
-            console.log(bot.users.cache);
-            break;
-
-        case "debug.listPlayers":
-            console.log(players);
-            msg.channel.send(JSON.stringify(players));
-            break;
-
-        case "debug.vars.cemitery":
-            console.log("cemitery:", cemitery);
-            msg.channel.send(
-                JSON.stringify({
-                    cemitery: cemitery,
-                })
-            );
-            break;
-
-        case "debug.vars.currentTurn":
-            console.log("currentTurn:", currentTurn);
-            msg.channel.send(
-                JSON.stringify({
-                    currentTurn: currentTurn,
-                })
-            );
-            break;
-
-        case "debug.vars.dayNightTurn":
-            console.log("dayNightTurn:", dayNightTurn);
-            msg.channel.send(
-                JSON.stringify({
-                    dayNightTurn: dayNightTurn,
-                })
-            );
-            break;
-
-        case "debug.vars.deck":
-            console.log("deck:", deck);
-            msg.channel.send(
-                JSON.stringify({
-                    deck: deck,
-                })
-            );
-            break;
-
-        case "debug.vars.isGameOn":
-            console.log("isGameOn:", isGameOn);
-            msg.channel.send(
-                JSON.stringify({
-                    isGameOn: isGameOn,
-                })
-            );
-            break;
-
-        case "debug.vars.players":
-            console.log("players:", players);
-            msg.channel.send(
-                JSON.stringify({
-                    players: players,
-                })
-            );
-            break;
-
-        case "debug.vars.playerCount":
-            console.log("playerCount:", playerCount);
-            msg.channel.send(
-                JSON.stringify({
-                    playerCount: playerCount,
-                })
-            );
-            break;
-
-        case "debug.vars.playerCards":
-            console.log("playerCards:", playerCards);
-            msg.channel.send(
-                JSON.stringify({
-                    playerCards: playerCards,
-                })
-            );
-            break;
-
-        case "debug.vars.hunterChosenIndex":
-            console.log("hunterChosenIndex:", hunterChosenIndex);
-            msg.channel.send(
-                JSON.stringify({
-                    hunterChosenIndex: hunterChosenIndex,
-                })
-            );
-            break;
-
-        case "debug.vars.zombieChosenIndex":
-            console.log("zombieChosenIndex:", zombieChosenIndex);
-            msg.channel.send(
-                JSON.stringify({
-                    zombieChosenIndex: zombieChosenIndex,
-                })
-            );
-            break;
-
-        case "debug.vars.vampireChosenIndex":
-            console.log(
-                "vampireChosenCemiteryIndex:",
-                vampireChosenCemiteryIndex
-            );
-            console.log("vampireChosenPlayerIndex:", vampireChosenPlayerIndex);
-            msg.channel.send(
-                JSON.stringify({
-                    cemiteryIndex: vampireChosenCemiteryIndex,
-                    playerIndex: vampireChosenPlayerIndex,
-                })
-            );
-            break;
-
-        case "debug.vars.pendingZombieNewActionExecution":
-            console.log(
-                "pendingZombieNewActionExecution:",
-                pendingZombieNewActionExecution
-            );
-            msg.channel.send(
-                JSON.stringify({
-                    pendingZombieNewActionExecution: pendingZombieNewActionExecution,
-                })
-            );
-            break;
-
-        case "debug.help":
-            msg.channel.send(
-                "**Opções:**\n" +
-                    "`debug.showCache`\n" +
-                    "`debug.listPlayers`\n" +
-                    "`debug.vars.cemitery`\n" +
-                    "`debug.vars.currentTurn`\n" +
-                    "`debug.vars.dayNightTurn`\n" +
-                    "`debug.vars.deck`\n" +
-                    "`debug.vars.isGameO`\n" +
-                    "`debug.vars.players`\n" +
-                    "`debug.vars.playerCount`\n" +
-                    "`debug.vars.playerCards`\n" +
-                    "`debug.vars.hunterChosenIndex`\n" +
-                    "`debug.vars.zombieChosenIndex`\n" +
-                    "`debug.vars.vampireChosenIndex`\n" +
-                    "`debug.vars.pendingZombieNewActionExecution`"
-            );
-    }
+    messageFunctions[msg.content](msg);
 });
 
 // Night actions
