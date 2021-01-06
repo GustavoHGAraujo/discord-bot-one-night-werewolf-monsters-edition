@@ -139,7 +139,7 @@ var players = [];
 
 const registerPlayer = (playerId, playerName) => {
     // procura jogador na lista de jogadores cadastrados
-    let existingPlayer = players.find(x => x.playerId === playerId);
+    let existingPlayer = players.find((x) => x.playerId === playerId);
 
     if (existingPlayer) {
         return false;
@@ -187,22 +187,7 @@ const chooseRandomly = (cardA, cardB) => {
     }
 };
 
-const deckToString = () => {
-    var deckAsString = "";
-
-    for (index in deck) {
-        const deckCard = deck[index];
-        const card = deckCard.card;
-
-        if (deckAsString == "") {
-            deckAsString = card.name;
-        } else {
-            deckAsString += ", " + card.name;
-        }
-    }
-
-    return deckAsString;
-};
+const deckToString = () => deck.map((x) => x.card.name).join(", ");
 
 const forEachCardOnDeck = (doSomething) => {
     for (index in deck) {
@@ -219,15 +204,12 @@ const forEachPlayerCard = (doSomething) => {
 };
 
 const isCardOnDeck = (card) => {
-    var isOnDeck = false;
+    let isOnDeck = deck.find((x) => x.card.id === card.id);
 
-    forEachCardOnDeck((deckCard) => {
-        if (card.id == deckCard.card.id) {
-            isOnDeck = true;
-        }
-    });
-
-    return isOnDeck;
+    if (isOnDeck) {
+        return true;
+    }
+    return false;
 };
 
 const isCardWithPlayer = (card) => {
