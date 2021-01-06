@@ -209,11 +209,12 @@ const isCardOnDeck = (card) => {
     if (isOnDeck) {
         return true;
     }
+
     return false;
 };
 
 const isCardWithPlayer = (card) => {
-    var isWithPlayer = false;
+    let isWithPlayer = false;
 
     playerCards.forEach((playerCard) => {
         if (card.id === playerCard.deckCard.card.id) {
