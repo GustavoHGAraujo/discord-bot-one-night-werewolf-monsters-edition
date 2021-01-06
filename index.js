@@ -53,6 +53,19 @@ const messageFunctions = {
     "debug.help": (msg) => debugFunctions.help(msg.channel),
 };
 
+const performCharacterAction = {
+    hunter: (msg) => performHunterAction(msg),
+    witch: (msg) => performWitchAction(msg),
+    zombie: (msg) => {
+        if (pendingZombieNewActionExecution) {
+            performZombieNewCardAction(msg);
+        } else {
+            performZombieAction(msg);
+        }
+    },
+    vampire: (msg) => performVampireAction(msg),
+};
+
 bot.login(token);
 bot.on("ready", () => {
     console.log("READY");
@@ -98,24 +111,7 @@ bot.on("message", (msg) => {
         return;
     }
 
-    switch (currentTurn) {
-        case CardHunter:
-            performHunterAction(msg);
-            break;
-        case CardWitch:
-            performWitchAction(msg);
-            break;
-        case CardZombie:
-            if (pendingZombieNewActionExecution) {
-                performZombieNewCardAction(msg);
-            } else {
-                performZombieAction(msg);
-            }
-            break;
-        case CardVampire:
-            performVampireAction(msg);
-            break;
-    }
+    performCharacterAction[currentTurn.id](msg);
 });
 
 const registerUserFromMessage = (msg) => {
