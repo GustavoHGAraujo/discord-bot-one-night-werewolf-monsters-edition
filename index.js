@@ -139,12 +139,10 @@ var players = [];
 
 const registerPlayer = (playerId, playerName) => {
     // procura jogador na lista de jogadores cadastrados
-    for (index in players) {
-        const player = players[index];
-        if (player.id == playerId) {
-            // jogador já cadastrado
-            return false;
-        }
+    let existingPlayer = players.find(x => x.playerId === playerId);
+
+    if (existingPlayer) {
+        return false;
     }
 
     players[playerCount] = { id: playerId, name: playerName };
